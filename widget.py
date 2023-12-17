@@ -36,6 +36,7 @@ class Widget(QWidget, Ui_HomeWindow, Ui_NewWindow, Ui_ExistingWindow, Ui_Profile
 
 
     def theme_(self):
+
         theme_toggle(self)
 
 
@@ -144,6 +145,7 @@ class Widget(QWidget, Ui_HomeWindow, Ui_NewWindow, Ui_ExistingWindow, Ui_Profile
         list_profile = self.getProfileList()
         self.comboBoxEx.addItems(list_profile)
         self.buttonContinueEx.pressed.connect(self.profile_view_e)
+        self.buttonHomeEx.pressed.connect(self.Home_e)
         self.buttonExitEx.clicked.connect(exit)
 
     
@@ -222,6 +224,7 @@ class Widget(QWidget, Ui_HomeWindow, Ui_NewWindow, Ui_ExistingWindow, Ui_Profile
         self.labelWelcomeProfile.setText(f'Welcome {name}')
         self.buttonContinueProfile.setFocus()
         self.buttonExitProfile.clicked.connect(exit)
+        
 
         self.buttonContinueProfile.pressed.connect(self.__test)
         self.buttonInfoProfile.pressed.connect(self.__info)
@@ -492,6 +495,8 @@ class Widget(QWidget, Ui_HomeWindow, Ui_NewWindow, Ui_ExistingWindow, Ui_Profile
         self.checkData()
         self.__trans()
 
+        with
+
 
     def checkData(self):
         self.flag = 0
@@ -544,8 +549,22 @@ class Widget(QWidget, Ui_HomeWindow, Ui_NewWindow, Ui_ExistingWindow, Ui_Profile
             self.labeHeaderTrans.setText('Failed')
             self.buttonRestartTrans.setFocus()
 
+        self.labelDetailsTrans.setText(f'\
+CPM : {self.CPM:.2f}\n\
+WPM : {self.WPM:.2f}\n\
+Time : {self.time:.2f}\n\
+Total Words : {self.words}\n\
+Total Chars : {self.countChar}')
+        self.label_2.setText(f'\
+Wrong Words : {self.wrongWords}\n\
+Wrong Chars : {self.wrongChars}\n\
+Correct Word Percent : {self.correctWords*100/self.words:.2f}\n\
+Correct Char Percent : {self.correctChars*100/self.countChar:.2f}\n\
+Weakest Chars : \n\
+Strongest Chars : ')
         self.buttonContinueTrans.pressed.connect(self.__test_p)
         self.buttonRestartTrans.pressed.connect(self.__test_restart)
+        self.buttonHomeTrans.pressed.connect(self.Home_tr)
         
 
     def __test_restart(self):
@@ -559,6 +578,21 @@ class Widget(QWidget, Ui_HomeWindow, Ui_NewWindow, Ui_ExistingWindow, Ui_Profile
     def __test_p(self):
         self.frameTrans.setVisible(False)
         self.__test()
+
+
+    def Home_p(self):
+        frame = self.frameProfile
+        self.__home(frame)
+
+
+    def Home_e(self):
+        frame = self.frameExProfile
+        self.__home(frame)
+
+
+    def Home_tr(self):
+        frame = self.frameTrans
+        self.__home(frame)
 
 
     def Home_n(self):
