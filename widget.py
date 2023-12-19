@@ -143,6 +143,8 @@ class Widget(QWidget, Ui_HomeWindow, Ui_NewWindow, Ui_ExistingWindow, Ui_Profile
         self.setWindowTitle('New Profile')
         self.new = self.setupExUi(self.frameExProfile)
         list_profile = self.getProfileList()
+        if list_profile == []:
+            self.buttonContinueEx.setDisabled(True)
         self.comboBoxEx.addItems(list_profile)
         self.buttonContinueEx.pressed.connect(self.profile_view_e)
         self.buttonHomeEx.pressed.connect(self.Home_e)
@@ -150,13 +152,17 @@ class Widget(QWidget, Ui_HomeWindow, Ui_NewWindow, Ui_ExistingWindow, Ui_Profile
 
     
     def getProfileList(self):
+
         with open('profiles/profile_list', 'r') as f:
             # Comment: 
             profile_list = f.readlines()
         # end readline file
 
         for i in range (len(profile_list)):
+            if profile_list[i] == '':
+                profile_list.pop(i)
             profile_list[i] = profile_list[i].strip('\n')
+
         return profile_list
 
 
@@ -165,9 +171,6 @@ class Widget(QWidget, Ui_HomeWindow, Ui_NewWindow, Ui_ExistingWindow, Ui_Profile
             # Comment: 
             name = f.readline()
         # end readline file
-
-        print('continue')
-        print(name)
 
         return name
 
@@ -191,6 +194,10 @@ class Widget(QWidget, Ui_HomeWindow, Ui_NewWindow, Ui_ExistingWindow, Ui_Profile
             # Comment: 
             f.write('1 0')
         # end overwrite file
+            
+        with open(f'profiles/D_{self.name_}', 'w') as f:
+            # Comment: 
+            f.write(' ')
     
 
     def profile_view_n(self):
@@ -200,6 +207,11 @@ class Widget(QWidget, Ui_HomeWindow, Ui_NewWindow, Ui_ExistingWindow, Ui_Profile
 
 
     def profile_view_h(self):
+        with open('profiles/last_profile', 'r') as f:
+            # Comment: 
+            if f.readline() == '':
+                self.name_ = 'Guest'
+                self.writeNread()
         self.name_ = self.getUser()
         self.__profile(self.frameHome, self.name_)
 
@@ -493,9 +505,33 @@ class Widget(QWidget, Ui_HomeWindow, Ui_NewWindow, Ui_ExistingWindow, Ui_Profile
         self.stop = time.time()
         self.final_time = self.stop - self.start
         self.checkData()
-        self.__trans()
+        
+        list_S = [self.CPM, self.WPM, self.time, self.countChar, self.chars, self.words, self.correctChars, self.correctWords, self.wrongChars]
+        str = ''
+        for x in list_S:
+            str += f'{x} '
+        
+        str += '\n'
 
-        with
+        with open(f'profiles/D_{self.name_}', 'r') as f:
+            # Comment: 
+            list_D = f.readlines()
+        # end readline file
+            
+        if len(list_D)>100:
+            list_D.pop(-1)
+            list_D.insert(0, str)
+            with open(f'profiles/D_{self.name_}', 'w') as f:
+                # Comment: 
+                f.writelines(list_D)
+        # end append file
+        else:
+            list_D.insert(0, str)
+            with open(f'profiles/D_{self.name_}', 'w') as f:
+                # Comment: 
+                f.writelines(list_D)
+
+        self.__trans()
 
 
     def checkData(self):
@@ -531,6 +567,7 @@ class Widget(QWidget, Ui_HomeWindow, Ui_NewWindow, Ui_ExistingWindow, Ui_Profile
             list2[0] += 1
             list2[1] = 0
 
+        
         with open(f'profiles/P_{self.name_}', 'w') as f:
             # Comment: 
             f.write(f'{list2[0]} {list2[1]}')
@@ -612,6 +649,6 @@ Strongest Chars : ')
         self.buttonContinueHome.clicked.connect(self.__continue)
         self.buttonExisitingHome.clicked.connect(self.__existing)
         self.buttonSettingsHome.clicked.connect(self.__setting)
-        self.buttonThemHome.clicked.connect(theme_toggle)
+        self.buttonThemHome.clicked.connect(self.theme_)
         self.buttonEcitHome.clicked.connect(exit)
 
