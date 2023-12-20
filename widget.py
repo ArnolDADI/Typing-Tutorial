@@ -11,9 +11,10 @@ from theme import *
 import time
 
 
-
 class Widget(QWidget, Ui_HomeWindow, Ui_NewWindow, Ui_ExistingWindow, Ui_ProfileWindow, Ui_TestWindow, Ui_Trans):
+    
     def __init__(self):
+        ''' To mmake the starting screen'''
         super().__init__()
         
         # Home UI
@@ -31,16 +32,16 @@ class Widget(QWidget, Ui_HomeWindow, Ui_NewWindow, Ui_ExistingWindow, Ui_Profile
         self.buttonSettingsHome.clicked.connect(self.__setting)
         self.buttonThemHome.clicked.connect(self.theme_)
         self.buttonEcitHome.clicked.connect(exit)
-        self.frameHome.keyPressEvent = self.keyPressEvent
         self.setLayout(self.mainlayout)
 
 
     def theme_(self):
-
+        ''' Theme control'''
         theme_toggle(self)
 
 
     def __new(self):
+        ''' Changing the screen to the new profile'''
         
         self.frameHome.setVisible(False)
         self.frameNewProfile = QFrame()
@@ -51,10 +52,12 @@ class Widget(QWidget, Ui_HomeWindow, Ui_NewWindow, Ui_ExistingWindow, Ui_Profile
         self.buttonContinueNew.setVisible(False)
         self.buttonContinueNew.clicked.connect(self.profile_view_n)
         self.buttonHomeNew.pressed.connect(self.Home_n)
+        self.lineEditNew.setFocus()
         self.buttonExitNew.clicked.connect(exit)
 
 
     def name__(self):
+        '''Check the name enetred by the user for the veracity and show Continue button in accordance to it'''
         name = self.lineEditNew.displayText()
         lenName = len(name)
         flag = 0
@@ -131,12 +134,14 @@ class Widget(QWidget, Ui_HomeWindow, Ui_NewWindow, Ui_ExistingWindow, Ui_Profile
             
 
     def __continue(self):
+        '''PassThrough to the Profile Frame'''
         self.frameHome.setVisible(False)
         self.frameContinue = QFrame()
         self.profile_view_h()
 
 
     def __existing(self):
+        ''' Show the existing frame'''
         self.frameHome.setVisible(False)
         self.frameExProfile = QFrame()
         self.mainlayout.addWidget(self.frameExProfile)
@@ -152,6 +157,7 @@ class Widget(QWidget, Ui_HomeWindow, Ui_NewWindow, Ui_ExistingWindow, Ui_Profile
 
     
     def getProfileList(self):
+        '''Get the list of the names of the users from file for the existing frame'''
 
         with open('profiles/profile_list', 'r') as f:
             # Comment: 
@@ -167,6 +173,7 @@ class Widget(QWidget, Ui_HomeWindow, Ui_NewWindow, Ui_ExistingWindow, Ui_Profile
 
 
     def getUser(self):
+        '''Return the previous user name'''
         with open('profiles/last_profile', 'r') as f:
             # Comment: 
             name = f.readline()
@@ -176,10 +183,12 @@ class Widget(QWidget, Ui_HomeWindow, Ui_NewWindow, Ui_ExistingWindow, Ui_Profile
 
 
     def __setting(self):
+        ''' Settings for the app'''
         pass
 
 
     def writeNread(self):
+        '''Save the name of the profile or create one if not available'''
         with open('profiles/profile_list', 'a') as f:
             # Comment: 
             f.write(f'\n{self.name_}')
@@ -201,12 +210,14 @@ class Widget(QWidget, Ui_HomeWindow, Ui_NewWindow, Ui_ExistingWindow, Ui_Profile
     
 
     def profile_view_n(self):
+        '''Passthrough to Profile from New Window'''
         self.name_ = self.lineEditNew.text()
         self.writeNread()
         self.__profile(self.frameNewProfile, self.name_)
 
 
     def profile_view_h(self):
+        '''Passthrough to Profile from Home Window'''
         with open('profiles/last_profile', 'r') as f:
             # Comment: 
             if f.readline() == '':
@@ -217,6 +228,7 @@ class Widget(QWidget, Ui_HomeWindow, Ui_NewWindow, Ui_ExistingWindow, Ui_Profile
 
 
     def profile_view_e(self):
+        '''Passthrough to Profile from Exisitng Window'''
         self.name_ = self.comboBoxEx.currentText()
         with open('profiles/last_profile', 'w') as f:
             # Comment: 
@@ -226,7 +238,7 @@ class Widget(QWidget, Ui_HomeWindow, Ui_NewWindow, Ui_ExistingWindow, Ui_Profile
 
 
     def __profile(self, frame, name):
-
+        ''' To display profile Window'''
         frame.setVisible(False)
         self.frameProfile = QFrame()
         self.mainlayout.addWidget(self.frameProfile)
@@ -244,13 +256,13 @@ class Widget(QWidget, Ui_HomeWindow, Ui_NewWindow, Ui_ExistingWindow, Ui_Profile
 
 
     def __test(self):
-        
+        '''Passthrough to testwindow'''
         self.testText = self.getText(self.name_)
         self.__testWindow()
 
 
     def getText(self,name):
-
+        ''' To get the text for the test using the exercise and chapter'''
         _details = ['']
         try:
             with open(f'profiles/P_{name}', 'r') as f:
@@ -288,6 +300,13 @@ class Widget(QWidget, Ui_HomeWindow, Ui_NewWindow, Ui_ExistingWindow, Ui_Profile
 
 
     def __info(self):
+        with open(f'profiles/D_{self.name_}') as f:
+            list_D = f.readlines()
+        
+        last_D = list_D[0]
+        last_D = list(list_D.split(' '))
+        
+        
         pass
 
 
@@ -651,4 +670,5 @@ Strongest Chars : ')
         self.buttonSettingsHome.clicked.connect(self.__setting)
         self.buttonThemHome.clicked.connect(self.theme_)
         self.buttonEcitHome.clicked.connect(exit)
+        self.setFocus()
 
