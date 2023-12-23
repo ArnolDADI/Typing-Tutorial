@@ -10,7 +10,6 @@ from checkFiles import CheckFiles
 
 app = QtWidgets.QApplication(sys.argv)
 
-mainwin = QtWidgets.QMainWindow()
 window = Widget()
 
 theme(app)
