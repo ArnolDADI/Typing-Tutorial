@@ -1,5 +1,6 @@
 from PySide6.QtCore import *
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QFrame
+from PySide6.QtGui import QFont
 from HomeWindow import Ui_HomeWindow
 from NewWindow import Ui_NewWindow
 from ExistingWindow import Ui_ExistingWindow
@@ -24,6 +25,7 @@ class Widget(QWidget, Ui_HomeWindow, Ui_NewWindow, Ui_ExistingWindow, Ui_Profile
         self.mainlayout.addWidget(self.frameHome)
         self.home = self.setupHomeUi(self.frameHome)
         self.setWindowTitle('Home Window')
+        self.buttonContinueHome.setFocus()
 
         self.buttonNewHome.clicked.connect(self.__new)
         self.buttonContinueHome.clicked.connect(self.__continue)
@@ -151,6 +153,7 @@ class Widget(QWidget, Ui_HomeWindow, Ui_NewWindow, Ui_ExistingWindow, Ui_Profile
         if list_profile == []:
             self.buttonContinueEx.setDisabled(True)
         self.comboBoxEx.addItems(list_profile)
+        self.comboBoxEx.setFocus()
         self.buttonContinueEx.pressed.connect(self.profile_view_e)
         self.buttonHomeEx.pressed.connect(self.Home_e)
         self.buttonExitEx.clicked.connect(exit)
@@ -247,9 +250,28 @@ class Widget(QWidget, Ui_HomeWindow, Ui_NewWindow, Ui_ExistingWindow, Ui_Profile
         self.profile = self.setupProfileUi(self.frameProfile)
         self.labelWelcomeProfile.setText(f'Welcome {name}')
         self.buttonContinueProfile.setFocus()
+
+        with open(f'profiles/D_{self.name_}') as f:
+            list_D = f.readlines()
+        self.label.setFont(QFont('OldEnglish'))
+
+        if list_D != []:
+            last_D = list_D[0]
+            last_D = list(last_D.split(' '))
+
+            self.label.setText(f"\
+1 CPM :                 {float(last_D[0]):.2f}\n\
+2 WPM :                 {float(last_D[1]):.2f}\n\
+3 Time Taken :          {float(last_D[2]):.2f}\n\
+4 Characters Typed :    {last_D[3]}\n\
+5 Correct Characters :  {last_D[6]}\n\
+6 Wrong Chars :         {last_D[8]}\n\
+7 Words Typed :         {last_D[5]}\n\
+8 Correct Words :       {last_D[7]}\n")
+            
+      
         self.buttonExitProfile.clicked.connect(exit)
         
-
         self.buttonContinueProfile.pressed.connect(self.__test)
         self.buttonInfoProfile.pressed.connect(self.__info)
         self.buttonExitProfile.clicked.connect(exit)
@@ -299,13 +321,7 @@ class Widget(QWidget, Ui_HomeWindow, Ui_NewWindow, Ui_ExistingWindow, Ui_Profile
         return textList[list2[1]]
 
 
-    def __info(self):
-        with open(f'profiles/D_{self.name_}') as f:
-            list_D = f.readlines()
-        
-        last_D = list_D[0]
-        last_D = list(list_D.split(' '))
-        
+    def __info(self):        
         
         pass
 
